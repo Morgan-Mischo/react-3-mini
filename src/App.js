@@ -29,26 +29,60 @@ class App extends Component {
   }
 
   getVehicles() {
+    axios.get('https://joes-autos.herokuapp.com/api/vehicles ')
+    .then ( res => {
+      toast.success('Got Vehicles!'); 
+      this.setState({
+        vehiclesToDisplay: res.data
+      })
+    })
+    .catch( err => toast.error('Something went wrong!'))
     // axios (GET)
     // setState with response -> vehiclesToDisplay
   }
 
   getPotentialBuyers() {
+    axios.get('https://joes-autos.herokuapp.com/api/buyers ')
+    .then ( res => {
+      toast.success('Got Buyers!'); 
+      this.setState({
+        buyersToDisplay: res.data
+      })
+    })
+    .catch( err => toast.error('Something went wrong!'))
     // axios (GET)
     // setState with response -> buyersToDisplay
   }
 
   sellCar(id) {
+
     // axios (DELETE)
     // setState with response -> vehiclesToDisplay
+    axios.delete(`https://joes-autos.herokuapp.com/api/vehicles/${id}`, newCar)
+    .then ( res => {
+      toast.success('Sold car'); 
+      console.log('res in sellCar', res); 
+    })
+    .catch(err => toast.error('Could not sell car')); 
   }
+ 
+
 
   filterByMake() {
     let make = this.selectedMake.value;
 
+    axios.get(`https://joes-autos.herokuapp.com/api/vehicles?make=${make}`)
+    .then ( res => {
+      toast.success('Sold car'); 
+      this.setState({
+        vehiclesToDisplay: res.data
+      })
+    })
+    .catch(err => toast.error('Could not filter by make'))
+  }
+
     // axios (GET)
     // setState with response -> vehiclesToDisplay
-  }
 
   filterByColor() {
     let color = this.selectedColor.value;
@@ -58,6 +92,13 @@ class App extends Component {
   }
 
   updatePrice(priceChange, id) {
+    axios.put(`https://joes-autos.herokuapp.com/api/vehicles/${id}/${priceChange}`)
+    .then( res => {
+      this.setState ({
+        vehiclesToDisplay: res.data.vehicles
+      })
+    })
+    .catch(err => toast.error('Could not update price')); 
     // axios (PUT)
     // setState with response -> vehiclesToDisplay
   }
@@ -71,6 +112,16 @@ class App extends Component {
       price: this.price.value
     };
 
+    axios.post(`https://joes-autos.herokuapp.com/api/vehicles`, newCar)//adding a body
+    .then( res => {
+      toast.success('Created vehicle')
+      this.setState({
+        vehiclesToDisplay: res.data.vehicles
+      })
+    })
+    .catch(err => toast.error( `THE PAIIIN`))
+  }
+ 
     // axios (POST)
     // setState with response -> vehiclesToDisplay
   }
@@ -93,6 +144,14 @@ class App extends Component {
 
   nameSearch() {
     let searchLetters = this.searchLetters.value;
+    axios.get(`https://joes-autos.herokuapp.com/api/buyers?name=${searchLetters}`)
+    .then( res => {
+      toast.success('Grabbed buyers')
+      this.setState({
+        buyersToDisplay: res.data
+      }); 
+    })
+    .catch(err => toast.error('Could not grab buyers')); 
 
     // axios (GET)
     // setState with response -> buyersToDisplay
